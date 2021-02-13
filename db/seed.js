@@ -1,6 +1,7 @@
 const { 
     client, 
     getAllUsers,
+    createUser,
 } = require('./index');
 
 // async function testDB() {
@@ -46,14 +47,30 @@ async function createTables() {
     }
 }
 
+async function createInitialUsers() {
+    try{
+        console.log("starting to create users ... ");
+        const albert = await createUser({ username: 'albert', password: 'bertie99'});
+        const sandra = await createUser({ username: 'sandra', password: 'glamgal'});
+        console.log(albert);
+        console.log(sandra);
+        console.log("finished creating init users");
+    } catch(error) {
+        console.error(error.message)
+        console.log("there is an error with creating init users")
+        throw error; 
+    }
+}
+
 async function rebuildDB(){
     try { 
         client.connect();
 
         await dropTables();
         await createTables();
-    } catch (erorr) {
-        console.error(error.message)
+        await createInitialUsers();
+    } catch (error) {
+        console.error(error)
     } 
 }
 
