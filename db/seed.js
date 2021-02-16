@@ -2,6 +2,7 @@ const {
     client, 
     getAllUsers,
     createUser,
+    updateUser,
 } = require('./index');
 
 // async function testDB() {
@@ -37,7 +38,10 @@ async function createTables() {
         CREATE TABLE users (
             id SERIAL PRIMARY KEY,
             username VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL
+            password VARCHAR(255) NOT NULL,
+            name VARCHAR(255) NOT NULL, 
+            location VARCHAR(255) NOT NULL, 
+            active BOOLEAN DEFAULT true
         );
         `);
         console.log("finshed building tables ... ")
@@ -50,8 +54,8 @@ async function createTables() {
 async function createInitialUsers() {
     try{
         console.log("starting to create users ... ");
-        const albert = await createUser({ username: 'albert', password: 'bertie99'});
-        const sandra = await createUser({ username: 'sandra', password: 'glamgal'});
+        const albert = await createUser({ username: 'albert', password: 'bertie99', name: 'Al', location: 'Sacramento, CA'});
+        const sandra = await createUser({ username: 'sandra', password: 'glamgal', name: 'Sandy', location: 'San Diego, CA'});
         console.log(albert);
         console.log(sandra);
         console.log("finished creating init users");
@@ -80,6 +84,10 @@ async function testDB(){
         const users = await getAllUsers();
         console.log("getAllUsers; ",users);
         console.log("finsihed database tests!")
+        const updateUserResult = await updateUser(users[0].id, {
+            name: "Bethany Smith",
+            location: "Frankfurt, Germany"
+        }); console.log(updateUserResult);
     } catch (error) {
         console.error("There has been an error in the database test!")
         throw error;
