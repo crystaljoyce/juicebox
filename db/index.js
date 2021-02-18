@@ -62,7 +62,7 @@ async function getAllUsers() {
 async function getAllTags() {
   try {
     const { rows } = await client.query(`
-      SELECT id,  
+      SELECT *,
       FROM tags;
     `);
 
