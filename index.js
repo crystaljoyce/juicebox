@@ -4,15 +4,11 @@ const server = express();
 const { client } = require('./db');
 client.connect();
 
-server.listen(PORT, () => {
-  console.log('The server is up on port', PORT)
-});
-
 const apiRouter = require('./api');
-server.use('/api', apiRouter);
 
 const bodyParser = require('body-parser');
 server.use(bodyParser.json());
+
 
 const morgan = require('morgan');
 server.use(morgan('dev'));
@@ -25,6 +21,8 @@ server.use((req, res, next) => {
     next();
   });
 
+  server.use('/api', apiRouter);
+
   
 //   app.use('/api', (req, res, next) => {
 //     console.log("A request was made to /api");
@@ -35,3 +33,7 @@ server.use((req, res, next) => {
 //     console.log("A get request was made to /api");
 //     res.send({ message: "success" });
 //   });
+
+server.listen(PORT, () => {
+    console.log('The server is up on port', PORT)
+  });

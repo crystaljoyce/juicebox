@@ -1,15 +1,10 @@
 
+const express = require('express');
 const postsRouter = express.Router();
 
-const postsRouter = require('./posts');
-apiRouter.use('/posts', postsRouter);
+postsRouter.get('/posts', (req, res, next) => {
+        console.log("A get request was made to /api");
+        res.send({"posts": []});
+      });
 
-const bodyParser = require('body-parser');
-
-server.use(bodyParser.json());
-
-server.us((req, res, next) => {
-    console.log('body is now: ', req.body)
-})
-
-module.export = postsRouter
+module.exports = postsRouter;
