@@ -140,7 +140,9 @@ async function getPostsByUser(userId) {
       FROM posts
       WHERE "authorId"=${ userId };
     `);
-
+    const posts = await Promise.all(postIds.map(
+      post => getPostById( post.id )
+    ));
     return rows;
   } catch (error) {
     throw error;
@@ -161,12 +163,12 @@ async function createTags(tagList) {
         INSERT INTO tags (name) VALUES (${ insertValues }),
         ON CONFLICT ((${ insertValues })) DO NOTHING 
         ) 
-      `,tagList)
+      `,tagList),
         // insert the tags, doing nothing on conflict
         // returning nothing, we'll query after
       (`
           SELECT * (name) FROM VALUES (${ selectValues }),
-          WHERE (name) IS ON (${ selectValues })
+          WHERE (name) IS IN (${ selectValues })
           RETURNING *; 
           `)
         // select all tags where the name is in our taglist
