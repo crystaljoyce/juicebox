@@ -27,11 +27,26 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
 });
 
 postsRouter.get('/', async (req,res) => {
-    const posts = await getAllPosts();
+    const posts = await getAllPosts(); console.log(getAllPosts())
+  try{
+    const posts = allPosts.filter(post => {
+      if (post.active) {
+        return true;
+      }
+      if (req.user && post.author.id === req.user.id) {
+        return true;
+      }
+      return false;
+    });
     
     res.send({
         posts
     });
+  } catch ({ name, message}){
+    next({name, message})
+  
+
+  }
 });
 
 postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
